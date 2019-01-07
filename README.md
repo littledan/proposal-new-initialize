@@ -112,6 +112,8 @@ console.log(instance.w);  // 2
 
 `class.initialize` is only permitted lexically inside of a constructor of a class, or inside of a direct `eval` in a constructor. It evaluates to a built-in function of length 1, which takes its single argument and calls the [`InitializeInstanceElements`](https://tc39.github.io/proposal-private-methods/#initialize-instance-elements) abstract operation on it. The argument is used as the return value.
 
+Note, only the fields and private methods from the class containing the current constructor will be added; fields and private methods from inherited classes are not added by `class.initialize` (but you can produce an object which has them through `Reflect.construct` if you want).
+
 The syntax uses the meta-property pattern, following the examples of `new.target` and `function.sent`. The syntax here overlaps with the [class access expressions proposal](https://github.com/tc39/proposal-class-access-expressions). The idea here would be to use the `static` keyword for that proposal, or some other metaproperty for this proposal. Most keywords don't have any metaproperties defined for them, so I'm confident we can find a non-clashing solution for both proposals.
 
 ## Implementation notes
