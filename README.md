@@ -17,9 +17,9 @@ class B extends A {
 }
 
 const instance = new B();
-console.log(b.x);  // 1
-console.log(b.y);  // 2
-console.log(b.z);  // undefined
+console.log(instance.x);  // 1
+console.log(instance.y);  // 2
+console.log(instance.z);  // undefined
 
 ```
 
@@ -30,9 +30,9 @@ So, if you mutate the prototype, a different super constructor will be called, w
 ```js
 B.__proto__ = class { constructor() { this.z = 3; } };
 const brokenInstance = new B();
-console.log(b.x);  // undefined!
-console.log(b.y);  // 2
-console.log(b.z);  // 3!
+console.log(brokenInstance.x);  // undefined!
+console.log(brokenInstance.y);  // 2
+console.log(brokenInstance.z);  // 3!
 ```
 
 You can prevent this from happening by making the prototype chain immutable, with `Object.preventExtensions` or `Object.freeze`:
@@ -55,9 +55,9 @@ class B extends A {
 
 B.__proto__ = class { constructor() { this.z = 3; } };
 const instance = new B();
-console.log(b.x);  // 1!
-console.log(b.y);  // 2
-console.log(b.z);  // undefined!
+console.log(instance.x);  // 1!
+console.log(instance.y);  // 2
+console.log(instance.z);  // undefined!
 ```
 
 This works great, and you can think of it as analogous to how built-in classes work.
@@ -81,8 +81,8 @@ console.log(instance.w);  // 2
 
 D.__proto__ = class {};
 const broken = new D();
-console.log(instance.v);  // TypeError!
-console.log(instance.w);  // 2
+console.log(broken.v);  // TypeError!
+console.log(broken.w);  // 2
 ```
 
 How should we prevent the TypeError and make sure that we're calling the `C`'s constructor, while still allowing the `D`'s constructor to add the private field `#w`?
@@ -104,8 +104,8 @@ class D {
 
 D.__proto__ = class {};
 const broken = new D();
-console.log(instance.v);  // 1!
-console.log(instance.w);  // 2
+console.log(broken.v);  // 1!
+console.log(broken.w);  // 2
 ```
 
 ## Detailed syntax and semantics
