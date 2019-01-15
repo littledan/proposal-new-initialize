@@ -108,6 +108,27 @@ console.log(broken.v);  // 1!
 console.log(broken.w);  // 2
 ```
 
+## Another use case: Simple observed classes with private
+
+Proxy can be used to observe an object. With ordinary properties, a property can be created on a Proxy using `=` or `Object.defineProperty`, but private fields and methods are only installed by constructors.  This means that a potentially awkward "super return trick" may be necessary to observe access to an object with private fields.
+
+`new.initialize` can simplify this pattern, by allowing a single constructor to both return a Proxy and add fields.
+
+```js
+class E {
+  #x;
+  get x() { return this.#x; }
+  constructor(x) {
+    const proxy = Proxy.new(Object.create(E.prototype), { /* ... */ });
+    new.initialize(proxy);
+    proxy.#x = 1;
+    return proxy;
+  }
+}
+const e = new E;
+e.x;  // 1, but also call the get trap
+```
+
 ## Detailed syntax and semantics
 
 `new.initialize` is only permitted lexically inside of a constructor of a class, or inside of a direct `eval` in a constructor. It evaluates to a built-in function of length 1, which takes its single argument and calls the [`InitializeInstanceElements`](https://tc39.github.io/proposal-private-methods/#initialize-instance-elements) abstract operation on it. The argument is used as the return value.
