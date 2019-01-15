@@ -1,4 +1,4 @@
-# `class.initialize()`
+# `new.initialize()`
 
 Early draft proposal to support initializing given objects with fields and private methods.
 
@@ -89,7 +89,7 @@ How should we prevent the TypeError and make sure that we're calling the `C`'s c
 
 ## Proposed solution
 
-The `class.initialize()` syntax can be used to add fields and private methods to any object, when a class wants to avoid calling the super constructor. The class `D` could be written as follows:
+The `new.initialize()` syntax can be used to add fields and private methods to any object, when a class wants to avoid calling the super constructor. The class `D` could be written as follows:
 
 ```js
 class D {
@@ -97,7 +97,7 @@ class D {
   get w() { return this.#w; }
   constructor() {
     const instance = Reflect.construct(C, [], new.target);
-    class.initialize(instance);
+    new.initialize(instance);
     return instance;
   }
 }
@@ -110,15 +110,15 @@ console.log(broken.w);  // 2
 
 ## Detailed syntax and semantics
 
-`class.initialize` is only permitted lexically inside of a constructor of a class, or inside of a direct `eval` in a constructor. It evaluates to a built-in function of length 1, which takes its single argument and calls the [`InitializeInstanceElements`](https://tc39.github.io/proposal-private-methods/#initialize-instance-elements) abstract operation on it. The argument is used as the return value.
+`new.initialize` is only permitted lexically inside of a constructor of a class, or inside of a direct `eval` in a constructor. It evaluates to a built-in function of length 1, which takes its single argument and calls the [`InitializeInstanceElements`](https://tc39.github.io/proposal-private-methods/#initialize-instance-elements) abstract operation on it. The argument is used as the return value.
 
-Note, only the fields and private methods from the class containing the current constructor will be added; fields and private methods from inherited classes are not added by `class.initialize` (but you can produce an object which has them through `Reflect.construct` if you want).
+Note, only the fields and private methods from the class containing the current constructor will be added; fields and private methods from inherited classes are not added by `new.initialize` (but you can produce an object which has them through `Reflect.construct` if you want).
 
-The syntax uses the meta-property pattern, following the examples of `new.target` and `function.sent`. The syntax here overlaps with the [class access expressions proposal](https://github.com/tc39/proposal-class-access-expressions). The idea here would be to use the `static` keyword for that proposal, or some other metaproperty for this proposal. Most keywords don't have any metaproperties defined for them, so I'm confident we can find a non-clashing solution for both proposals.
+The syntax uses the meta-property pattern, following the examples of `new.target` and `function.sent`.
 
 ## Implementation notes
 
-Some current and in-progress implementations in JS engines of public and private fields and methods internally create a hidden function which does the equivalent of `class.initialize`, but taking the instance under construction as the receiver, not the parameter. The implementation of `class.initialize` would be a simple wrapper around that function. It only needs to be created if the constructor contains `class.initialize` or a direct `eval` lexically contained in it, so there should not be significant memory overhead in practice.
+Some current and in-progress implementations in JS engines of public and private fields and methods internally create a hidden function which does the equivalent of `new.initialize`, but taking the instance under construction as the receiver, not the parameter. The implementation of `new.initialize` would be a simple wrapper around that function. It only needs to be created if the constructor contains `new.initialize` or a direct `eval` lexically contained in it, so there should not be significant memory overhead in practice.
 
 ## Interim solutions
 
