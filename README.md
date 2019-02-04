@@ -119,7 +119,7 @@ class E {
   #x;
   get x() { return this.#x; }
   constructor(x) {
-    const proxy = Proxy.new(Object.create(E.prototype), { /* ... */ });
+    const proxy = new Proxy(Object.create(E.prototype), { /* ... */ });
     new.initialize(proxy);
     proxy.#x = 1;
     return proxy;
