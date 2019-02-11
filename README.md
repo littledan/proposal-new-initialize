@@ -71,7 +71,7 @@ class C {
   #v = 1;
   get v() { return this.#v; }
 }
-class D {
+class D extends C {
   #w = 2;
   get w() { return this.#w; }
 }
