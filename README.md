@@ -64,7 +64,7 @@ This works great, and you can think of it as analogous to how built-in classes w
 
 ## The problem
 
-Field declarations and private methods are added by the language runtime implicitly, either at the beginning of the constructor (in base classes) or as the last step in `super()` (in subclasses). If we're using `Reflect.construct` to make sure we're always calling out to the original superclass constructor, while keeing the constructor itself non-frozen, how should we allow the subclass to add fields or private methods?
+Field declarations and private methods are added by the language runtime implicitly, either at the beginning of the constructor (in base classes) or as the last step in `super()` (in subclasses). If we're using `Reflect.construct` to make sure we're always calling out to the original superclass constructor, while keeping the constructor itself non-frozen, how should we allow the subclass to add fields or private methods?
 
 ```js
 class C {
